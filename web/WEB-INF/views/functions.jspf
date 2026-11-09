@@ -1,0 +1,33 @@
+<%@ page pageEncoding="UTF-8" import="java.math.BigDecimal,java.net.URLEncoder,java.nio.charset.StandardCharsets,java.text.NumberFormat,java.time.LocalDate,java.time.format.DateTimeParseException,java.time.format.DateTimeFormatter,java.util.Locale,java.util.UUID,javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpSession" %>
+<%!
+    private String h(Object value) {
+        if (value == null) return "";
+        return value.toString().replace("&", "&amp;").replace("<", "&lt;")
+                .replace(">", "&gt;").replace("\"", "&quot;").replace("'", "&#39;");
+    }
+    private String param(HttpServletRequest request, String name) {
+        String value = request.getParameter(name);
+        return value == null ? "" : value;
+    }
+    private String money(BigDecimal value) {
+        return NumberFormat.getNumberInstance(Locale.forLanguageTag("vi-VN")).format(value);
+    }
+    private String date(LocalDate value) { return value.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")); }
+    private LocalDate parseDate(String value) {
+        if (value == null || value.isBlank()) throw new IllegalArgumentException("Vui lòng chọn đầy đủ Ngày bắt đầu và Ngày kết thúc.");
+        try { return LocalDate.parse(value); }
+        catch (DateTimeParseException ex) { throw new IllegalArgumentException("Ngày không hợp lệ. Vui lòng chọn lại khoảng thời gian."); }
+    }
+    private String rangeQuery(LocalDate from, LocalDate to) { return "fromDate=" + from + "&toDate=" + to; }
+    private String url(String value) { return URLEncoder.encode(value, StandardCharsets.UTF_8); }
+    private String csrf(HttpSession session) {
+        String token = (String) session.getAttribute("csrf");
+        if (token == null) { token = UUID.randomUUID().toString(); session.setAttribute("csrf", token); }
+        return token;
+    }
+    private boolean validCsrf(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        return session != null && session.getAttribute("csrf") != null
+                && session.getAttribute("csrf").equals(request.getParameter("csrf"));
+    }
+%>

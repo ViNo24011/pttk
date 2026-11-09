@@ -1,0 +1,4 @@
+# Copy to database.properties and fill in your own MySQL credentials.
+db.url=jdbc:mysql://127.0.0.1:3306/qlst_dienmay?useUnicode=true&characterEncoding=UTF-8&connectionTimeZone=Asia/Ho_Chi_Minh&allowPublicKeyRetrieval=true&sslMode=PREFERRED
+db.user=root
+db.password=

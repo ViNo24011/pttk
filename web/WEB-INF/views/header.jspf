@@ -1,0 +1,29 @@
+<%@ page pageEncoding="UTF-8" import="Model.SystemUser6" %>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%= h(request.getAttribute("pageTitle")) %> · Siêu thị Điện máy</title>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/style.css">
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" href="<%= request.getContextPath() %>/"><span class="brand-mark">ĐM</span> Siêu thị Điện máy</a>
+    <nav aria-label="Điều hướng chính">
+    <% SystemUser6 navigationUser = (SystemUser6) session.getAttribute("currentUser");
+       if (navigationUser == null) { %>
+        <a href="<%= request.getContextPath() %>/View/SystemUser6/LoginGUI6.jsp">Đăng nhập</a>
+    <% } else { %>
+        <span class="user-name"><%= h(navigationUser.getFullName()) %></span>
+        <% if ("MANAGER".equals(navigationUser.getRole())) { %>
+        <a href="<%= request.getContextPath() %>/View/Manager6/ManagerViewGUI6.jsp">Quản lý</a>
+        <% } %>
+        <form action="<%= request.getContextPath() %>/View/SystemUser6/LogoutGUI6.jsp" method="post" class="inline-form">
+            <input type="hidden" name="csrf" value="<%= csrf(session) %>">
+            <button class="text-button" type="submit">Đăng xuất</button>
+        </form>
+    <% } %>
+    </nav>
+</header>
+<main class="container">
