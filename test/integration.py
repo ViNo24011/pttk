@@ -17,7 +17,11 @@ import uuid
 
 BASE = (sys.argv[1] if len(sys.argv) > 1 else 'http://localhost:8081/pttk').rstrip('/')
 ROOT = Path(__file__).resolve().parents[1]
-MYSQL = os.environ.get('PTTK_MYSQL', r'C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe')
+MYSQL = os.environ.get('PTTK_MYSQL', 'mysql')
+MANAGER_EMAIL = os.environ.get('PTTK_TEST_MANAGER_EMAIL')
+MANAGER_PASSWORD = os.environ.get('PTTK_TEST_MANAGER_PASSWORD')
+if not MANAGER_EMAIL or not MANAGER_PASSWORD:
+    raise SystemExit('Set PTTK_TEST_MANAGER_EMAIL and PTTK_TEST_MANAGER_PASSWORD before running integration tests.')
 RUN = uuid.uuid4().hex[:12]
 EMAILS = [f'test-{RUN}@example.com', f'race-{RUN}@example.com']
 checks = 0
@@ -69,10 +73,10 @@ try:
     for route in ['ManagerViewGUI6.jsp','SelectReportGUI6.jsp','FilterCustomerRevenueGUI6.jsp','CustomerRevenueReportGUI6.jsp?'+RANGE,'CustomerTransactionDetailGUI6.jsp?customerCode=KH000101&'+RANGE]:
         status,url,_=guest.request(MANAGER+route)
         check(status==200 and 'LoginGUI6.jsp?required=1' in url,'guest cannot access '+route.split('?')[0])
-    _,_,page=guest.login('quanly@dienmay.vn','incorrect')
+    _,_,page=guest.login(MANAGER_EMAIL,'incorrect')
     check('Email hoặc mật khẩu không đúng.' in page,'incorrect manager password rejected')
     manager=Client()
-    status,url,page=manager.login('quanly@dienmay.vn','QuanLy@123')
+    status,url,page=manager.login(MANAGER_EMAIL,MANAGER_PASSWORD)
     check(status==200 and url.endswith('ManagerViewGUI6.jsp'),'manager login and redirect')
     for route in ['SelectReportGUI6.jsp','FilterCustomerRevenueGUI6.jsp']:
         check(manager.request(MANAGER+route)[0]==200,'render '+route)

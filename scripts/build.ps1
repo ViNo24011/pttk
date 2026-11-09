@@ -1,5 +1,6 @@
-param([string]$TomcatHome = 'C:\Users\Admin\Downloads\apache-tomcat-9.0.115-windows-x64\apache-tomcat-9.0.115')
+param([string]$TomcatHome = $env:CATALINA_HOME)
 $ErrorActionPreference = 'Stop'
+if (-not $TomcatHome) { throw 'Set CATALINA_HOME or pass -TomcatHome with the Tomcat 9 directory.' }
 $projectDir = Split-Path -Parent $PSScriptRoot
 $javaDir = if ($env:JAVA_HOME) { Join-Path $env:JAVA_HOME 'bin' } else { Split-Path (Get-Command javac.exe).Source }
 $webOutput = Join-Path $projectDir 'build\web'

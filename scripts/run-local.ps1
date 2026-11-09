@@ -1,9 +1,10 @@
 param(
-    [string]$TomcatHome = 'C:\Users\Admin\Downloads\apache-tomcat-9.0.115-windows-x64\apache-tomcat-9.0.115',
+    [string]$TomcatHome = $env:CATALINA_HOME,
     [int]$Port = 8081,
     [switch]$SkipBuild
 )
 $ErrorActionPreference = 'Stop'
+if (-not $TomcatHome) { throw 'Set CATALINA_HOME or pass -TomcatHome with the Tomcat 9 directory.' }
 $projectDir = Split-Path -Parent $PSScriptRoot
 if (-not $SkipBuild) { & (Join-Path $PSScriptRoot 'build.ps1') -TomcatHome $TomcatHome }
 $runtimeDir = Join-Path $projectDir '.runtime\tomcat'

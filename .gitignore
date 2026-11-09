@@ -1,5 +1,12 @@
 /build/
 /dist/
 /.runtime/
-/config/database.properties
 /nbproject/private/
+/.idea/
+/docs/
+.env
+.env.*
+!.env.example
+*.log
+__pycache__/
+*.pyc
