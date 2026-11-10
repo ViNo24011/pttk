@@ -10,6 +10,7 @@ Dự án Java Web triển khai hai chức năng theo báo cáo **HTTT – Đề 
 Java 21 · JSP/HTML/CSS · JDBC · MySQL 8 · Tomcat 9 · NetBeans/Ant.
 
 ## Cấu trúc dự án
+- folder SystemUser6 cho quản lý đăng nhập và sử dụng chức năng, khách hàng test đăng nhập sau khi đăng ký tài khoản
 
 ```text
 pttk/
